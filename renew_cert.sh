@@ -10,7 +10,7 @@ if [ $WEBDIR == "/" ]; then
 fi
 WEBSITE=${WEBDIR##*/} 
 
-echo "renewing keys/certificate for website $WEBSITE"
+echo "renewing certificate for website $WEBSITE"
 
 python ~/acme-tiny/acme_tiny.py --account-key $WEBDIR/keys/account.key --csr $WEBDIR/keys/domain.csr --acme-dir $WEBDIR/public/.well-known/acme-challenge > $WEBDIR/keys/signed.crt
 if [ $? -ne 0 ]; then
