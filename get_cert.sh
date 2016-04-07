@@ -10,6 +10,8 @@ if [ $WEBDIR == "/" ]; then
 fi
 WEBSITE=${WEBDIR##*/} 
 
+echo "generating keys/certificate for website $WEBSITE"
+
 # create account key for letsencrypt:
 openssl genrsa 4096 > $WEBDIR/keys/account.key
 if [ $? -ne 0 ]; then

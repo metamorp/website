@@ -1,8 +1,9 @@
 # website
-[metamorp.com] without the keys
+[metamorp.com](https://metamorp.com) without the keys
 
 Here's the way we setup metamorp.com to serve webpages via Express (Node.js) 
-over https using LetsEncrypt.org, using [acme-tiny](https://github.com/diafygi/acme-tiny).
+over https using [LetsEncrypt.org](https://letsencrypt.org), 
+using [acme-tiny](https://github.com/diafygi/acme-tiny) for validation.
 
 We use an unprivileged user to serve the webpage to ports 3000 and 3443, which are
 rerouted through ports 80 and 443 using iptables:
@@ -16,7 +17,7 @@ iptables -A PREROUTING -t nat -p tcp --dport 443 -j REDIRECT --to-port 3443
 
 To make this work for your own server, clone [acme-tiny](https://github.com/diafygi/acme-tiny)
 into the unprivileged user's home directory, and clone this repository to `your-website.com`
-(also in the home directory).
+(wherever you like).
 
 Look at (and modify as necessary) the scripts `get_cert.sh` and `renew_cert.sh`, 
 which can be run by the unprivileged user to get the first LetsEncrypt.org certificate, and
