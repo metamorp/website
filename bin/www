@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+
+/* app and secure (https) app */
+var app = require('../app');
+var sapp = require("../sapp");

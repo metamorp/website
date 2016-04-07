@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  h1= title
+  p#message
+  script(type='text/javascript' src="https://cdn.socket.io/socket.io-1.2.0.js")
+  script.
+    var socket = io.connect({reconnect: false}); // 'https://localhost');
+    var message = document.getElementById("message");
+    var cookie = {};
+    socket.on('connect', function() {
+        console.log("server connection started/reset!");
+        cookie.sid = "/#" + socket.io.engine.id; // not sure why this needs a prefix
+        console.log("my sid is ", cookie.sid);
+        socket.emit("client arrived", cookie.sid);
+    });
+    
+    socket.on('server acknowledge', function() {
+        message.innerHTML = "but server connection established!";
+    });
