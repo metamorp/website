@@ -1,6 +1,209 @@
 extends layout
 
 block content
-  h1= title
-  p Please go to https-based website:  
-    a(href="https://metamorp.com/") Metamorp
+  center
+   h1= title
+   p Please go to the #[a(href="https://metamorp.com/") https-based website].
+   div(style="width:200px;height:200px;")
+    //table(style="width:100%;height:100%;border:0;border-collapse:collapse;" id='shuffleboard')
+    table(style="width:100%;height:100%;border:0;" id='shuffleboard')
+  script.
+    var shuffleboard = document.getElementById("shuffleboard");
+    var cols = 7, rows = 7, neutralColor = "#eee";
+    var player, enemy;
+    for (var i=0; i<rows; i++) {
+      var row = shuffleboard.insertRow();
+      for (var j=0; j<cols; j++) {
+        row.insertCell(j);
+      }
+    }
+    reset();
+    function reset() {
+      var classes = ["zero", "one"];
+      for (var i=0; i<rows; i++)
+      for (var j=0; j<cols; j++) {
+        shuffleboard.rows[i].cells[j].className = classes[(i+j)%2];
+      }
+      var p = document.getElementById("player");
+      if (p) {
+        p.id = "";
+      }
+      p = document.getElementById("enemy");
+      if (p) {
+        p.id = "";
+      }
+      player = { row: 0, col: 0, name: "player", move: 0, on: "#0e0", off: "#e00" };
+      enemy = { row: rows-1, col: cols-1, name: "enemy", move: 0, on: "#00f", off: "#a0a" };
+      shuffleboard.rows[0].cells[0].style.borderColor = player.on;
+      shuffleboard.rows[rows-1].cells[cols-1].style.borderColor = enemy.on;
+    }
+    function try_move_left(mover, otherguy) {
+        if (mover.col > 0 && (otherguy.col != mover.col-1 || otherguy.row != mover.row)) {
+          var previous = shuffleboard.rows[mover.row].cells[mover.col],
+              current = shuffleboard.rows[mover.row].cells[--mover.col];
+          previous.style.borderColor = neutralColor;
+          if (mover.move) {
+            current.style.borderColor = mover.on;
+            switch (mover.move) {
+              case 1: // had moved left
+                // swap with initial starting board 
+                previous = shuffleboard.rows[mover.row].cells[mover.col+2];
+                break;
+              case 2: // had moved up
+                // swap boards along diagonal
+                previous = shuffleboard.rows[mover.row].cells[mover.col+1];
+                current = shuffleboard.rows[mover.row+1].cells[mover.col];
+                break;
+              case 3: // had moved right
+                // swap the previous/current as they are
+                break;
+              case 4: // had moved down
+                previous = shuffleboard.rows[mover.row].cells[mover.col+1];
+                current = shuffleboard.rows[mover.row-1].cells[mover.col];
+                break;
+            }
+            var c = current.className;
+            current.className = previous.className;
+            previous.className = c;
+            mover.move = 0;
+          } else {
+            current.style.borderColor = mover.off;
+            mover.move = 1;
+          }
+        }
+    }
+    function try_move_right(mover, otherguy) {
+        if (mover.col < cols-1 && (otherguy.col != mover.col+1 || otherguy.row != mover.row)) {
+          var previous = shuffleboard.rows[mover.row].cells[mover.col],
+              current = shuffleboard.rows[mover.row].cells[++mover.col];
+          previous.style.borderColor = neutralColor;
+          if (mover.move) {
+            current.style.borderColor = mover.on;
+            switch (mover.move) {
+              case 1: // had moved left
+                break;
+              case 2: // had moved up
+                previous = shuffleboard.rows[mover.row].cells[mover.col-1];
+                current = shuffleboard.rows[mover.row+1].cells[mover.col];
+                break;
+              case 3: // had moved right
+                previous = shuffleboard.rows[mover.row].cells[mover.col-2];
+                break;
+              case 4: // had moved down
+                previous = shuffleboard.rows[mover.row].cells[mover.col-1];
+                current = shuffleboard.rows[mover.row-1].cells[mover.col];
+                break;
+            }
+            var c = current.className;
+            current.className = previous.className;
+            previous.className = c;
+            mover.move = 0;
+          } else {
+            current.style.borderColor = mover.off;
+            mover.move = 3;
+          }
+        }
+    }
+    function try_move_up(mover, otherguy) {
+        if (mover.row > 0 && (otherguy.row != mover.row-1 || otherguy.col != mover.col)) {
+          var previous = shuffleboard.rows[mover.row].cells[mover.col],
+              current = shuffleboard.rows[--mover.row].cells[mover.col];
+          previous.style.borderColor = neutralColor;
+          if (mover.move) {
+            current.style.borderColor = mover.on;
+            switch (mover.move) {
+              case 1: // had moved left
+                previous = shuffleboard.rows[mover.row].cells[mover.col+1];
+                current = shuffleboard.rows[mover.row+1].cells[mover.col];
+                break;
+              case 2: // had moved up
+                previous = shuffleboard.rows[mover.row+2].cells[mover.col];
+                break;
+              case 3: // had moved right
+                previous = shuffleboard.rows[mover.row].cells[mover.col-1];
+                current = shuffleboard.rows[mover.row+1].cells[mover.col];
+                break;
+              case 4: // had moved down
+                break;
+            }
+            var c = current.className;
+            current.className = previous.className;
+            previous.className = c;
+            mover.move = 0;
+          } else {
+            current.style.borderColor = mover.off;
+            mover.move = 2;
+          }
+        }
+    }
+    function try_move_down(mover, otherguy) {
+        if (mover.row < rows-1 && (otherguy.row != mover.row+1 || otherguy.col != mover.col)) {
+          var previous = shuffleboard.rows[mover.row].cells[mover.col],
+              current = shuffleboard.rows[++mover.row].cells[mover.col];
+          previous.style.borderColor = neutralColor;
+          if (mover.move) {
+            current.style.borderColor = mover.on;
+            switch (mover.move) {
+              case 1: // had moved left
+                previous = shuffleboard.rows[mover.row].cells[mover.col+1];
+                current = shuffleboard.rows[mover.row-1].cells[mover.col];
+                break;
+              case 2: // had moved up
+                break;
+              case 3: // had moved right
+                previous = shuffleboard.rows[mover.row].cells[mover.col-1];
+                current = shuffleboard.rows[mover.row-1].cells[mover.col];
+                break;
+              case 4: // had moved down
+                previous = shuffleboard.rows[mover.row-2].cells[mover.col];
+                break;
+            }
+            var c = current.className;
+            current.className = previous.className;
+            previous.className = c;
+            mover.move = 0;
+          } else {
+            current.style.borderColor = mover.off;
+            mover.move = 4;
+          }
+        }
+    }
+    document.onkeydown = function(evt) 
+    {
+      //evt = evt || window.event;
+      switch (evt.keyCode) {
+        case 27:
+          reset();
+          break;
+        case 37: // left
+          try_move_left(player, enemy);
+          break;
+        case 38: // up
+          try_move_up(player, enemy);
+          break;
+        case 39: // right
+          try_move_right(player, enemy);
+          break;
+        case 40: // down
+          try_move_down(player, enemy);
+          break;
+      }
+    };
+
+    setInterval(function() {
+      switch ( Math.floor(Math.random()*4) ) {
+        case 0: // left
+          try_move_left(enemy, player);
+          break;
+        case 1: // up
+          try_move_up(enemy, player);
+          break;
+        case 2: // right
+          try_move_right(enemy, player);
+          break;
+        case 3: // down
+          try_move_down(enemy, player);
+          break;
+      }
+    }, 2000); // have enemy move every 2 seconds
+

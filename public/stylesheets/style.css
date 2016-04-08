@@ -5,3 +5,19 @@ body {
 a {
   color: #ff0000;
 }
+
+tr {
+  height:auto;
+}
+td {
+  border: 2px solid #eee;
+  height:auto;
+}
+
+.zero {
+  background-color:#fa0;
+}
+.one {
+  background-color:#fff;
+}
+
