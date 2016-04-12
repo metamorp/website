@@ -29,7 +29,7 @@ var sapp = express();
 // create HTTPS server
 var https = require('https');
 var privateKey = fs.readFileSync('keys/domain.key', 'utf8');
-var certificate = fs.readFileSync('keys/signed.crt', 'utf8');
+var certificate = fs.readFileSync('keys/fullchain.pem', 'utf8');
 var options = {key: privateKey, cert: certificate};
 var sserver = https.createServer(options, sapp);
 sserver.timeout = 5*60000; // 5 minutes
