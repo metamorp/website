@@ -1,6 +1,5 @@
 # website
-A Node.js server for http://metamorp.com and https://metamorp.com,
-using [LetsEncrypt](https://letsencrypt.org) for a certificate, 
+A simple Node.js server using [LetsEncrypt](https://letsencrypt.org) for a certificate, 
 and [acme-tiny](https://github.com/diafygi/acme-tiny) to prove ourselves to LetsEncrypt.
 
 We use an unprivileged user to serve the webpage to ports 3000 and 3443, which are

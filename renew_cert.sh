@@ -18,4 +18,11 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+cat $WEBDIR/keys/signed.crt $WEBDIR/keys/chain.pem > $WEBDIR/keys/fullchain.pem
+if [ $? -ne 0 ]; then
+    >&2 echo "should have been fine here concatenating the certificates."
+    exit 1
+fi
+
+
 exit 0
