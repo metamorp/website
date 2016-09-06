@@ -37,13 +37,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# do the acme challenge:
-python ~/acme-tiny/acme_tiny.py --account-key $WEBDIR/keys/account.key --csr $WEBDIR/keys/domain.csr --acme-dir $WEBDIR/public/.well-known/acme-challenge > $WEBDIR/keys/signed.crt
-if [ $? -ne 0 ]; then
-    >&2 echo "error!  LetsEncrypt could not validate.  check if 'website name' = 'directory name' and try again with 'renew_cert.sh'"
-    exit 1
-fi
-
 # the rest of the stuff is important for firefox and other ssl considerations
 
 # get the intermediate certificate.  (this may need to be updated if letsencrypt changes things...)
@@ -53,10 +46,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-cat $WEBDIR/keys/signed.crt $WEBDIR/keys/chain.pem > $WEBDIR/keys/fullchain.pem
-if [ $? -ne 0 ]; then
-    >&2 echo "should have been fine here concatenating the certificates."
-    exit 1
-fi
+touch $WEBDIR/keys/fullchain.pem
 
 exit 0

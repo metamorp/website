@@ -21,13 +21,18 @@ sudo sh iptables.rc
 sudo su -c 'iptables-save > /etc/iptables/rules.v4'
 ```
 
+## Website setup + signing the HTTPS keys
+
 To configure the rest for your own server, as the unprivileged user,
 clone [acme-tiny](https://github.com/diafygi/acme-tiny) into the unprivileged user's home directory, 
 and clone this repository to `your-website.com` (wherever the unprivileged user wants it).
 
-Look at (and modify as necessary) the scripts `get_cert.sh` and `renew_cert.sh`, 
-which can be run by the unprivileged user to get the first https://LetsEncrypt.org certificate, and
-then renew it (which needs to happen at least every 90 days).  You may want a cron job for that.
+Before starting the website, one can use `nodemon` (`sudo npm install -g nodemon`), 
+but definitely `npm install` (in this directory), 
 
-Then `sudo npm install -g nodemon`, `npm install` (in this directory), 
-and `./start_serving.sh` to start serving the webpage.
+To generate some keys, run `./gen_keys.sh`, then startup the website (`./start_serving.sh`).
+Make sure you can access the basic HTTP website online, then run `./sign_keys.sh` to get HTTPS
+certification from LetsEncrypt.  You'll need to resign keys every 90 days (`./sign_keys.sh`), 
+and may want a cron job for that.  After signing the keys, you may need to 
+`./restart_serving.sh` to get the new keys in play.
+
